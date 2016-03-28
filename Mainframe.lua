@@ -56,14 +56,40 @@ local module = {}
 		local loaded, comments = false, nil;
 		remote:FireServer({userId, "LoadComments"})
 		remote.OnClientEvent:connect(function(var)
-			loaded = true;
-			comments = var;
+			if var[1] == "Comments" then
+				loaded = true;
+				comments = var[2];
+			end;
 		end);	
 		
 		repeat wait(0.3) until loaded;	
 		
 		
 		return comments;		
+	end;
+	
+	module.SetUpCountSystem = function(goal_amount)
+		local remote = game.ReplicatedStorage.DataStore;
+		remote:FireServer({goal_amount, "Set_Count"});
+	end;
+	
+	module.GetCount = function(userId)
+		local remote =  game.ReplicatedStorage.DataStore;
+		remote:FireServer({userId, "GetVet"})
+		local loaded, vet = false, nil;
+		remote.OnClientEvent:connect(function(var)
+			if var[1] == "Vet" then
+				loaded = true;
+				vet = var[2];
+			end;
+		end);
+		repeat wait(0.3) until loaded;
+		return vet;
+	end;
+	
+	module.AddtoCount = function(userId)
+		local remote = game.ReplicatedStorage.DataStore;
+		remote:FireServer({userId, "AddVet"});
 	end;
 	
 return module
